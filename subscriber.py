@@ -35,7 +35,6 @@ def on_message(mosq, obj, msg):
 
     # Save data to db
     handle_database(msg.topic, msg.payload)
-    #
 
 def on_subscribe(mosq, obj, mid, granted_qos):
     print("Subscribed succesfully!")
@@ -46,14 +45,15 @@ def handle_database(topic, payload):
         temp_data.append(json.loads(payload))
         
         if(len(temp_data) == database_batch_size):
-            print(temp_data)
-            print(collection.insert_many(temp_data))
+            print("Sending batch of data to database, topic: {}". format(topic))
+            collection.insert_many(temp_data)
             temp_data.clear()
 
     if(topic == MQTT_Topic_Humidity):
         humidity_data.append(json.loads(payload))
 
         if(len(humidity_data) == database_batch_size):
+            print("Sending batch of data to database, topic: {}". format(topic))
             collection.insert_many(humidity_data)
             humidity_data.clear()
 
@@ -61,6 +61,7 @@ def handle_database(topic, payload):
         airPressure_data.append(json.loads(payload))
 
         if(len(airPressure_data) == database_batch_size):
+            print("Sending batch of data to database, topic: {}". format(topic))
             collection.insert_many(airPressure_data)
             airPressure_data.clear()
 
@@ -68,6 +69,7 @@ def handle_database(topic, payload):
         contamination_data.append(json.loads(payload))
 
         if(len(contamination_data) == database_batch_size):
+            print("Sending batch of data to database, topic: {}". format(topic))
             collection.insert_many(contamination_data)
             contamination_data.clear()
 
