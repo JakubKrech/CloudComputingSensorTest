@@ -6,7 +6,7 @@ import paho.mqtt.client as mqtt
 import sensor_data_generator as sdg
 
 # MQTT Settings ---------------------------------------
-MQTT_Broker = "test.mosquitto.org"   #"54.159.150.221"
+MQTT_Broker = "3.86.177.214" #"test.mosquitto.org"   #"54.159.150.221"
 MQTT_Port = 1883
 Keep_Alive_Interval = 45
 MQTT_Topic_Temperature   = "krekan/Temperature"

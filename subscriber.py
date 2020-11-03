@@ -3,7 +3,7 @@ import paho.mqtt.client as mqtt
 from pymongo import MongoClient
 
 # MQTT Settings ---------------------------------------
-MQTT_Broker = "test.mosquitto.org" #"54.159.150.221" 
+MQTT_Broker = "3.86.177.214" #"test.mosquitto.org" #"54.159.150.221" 
 MQTT_Port = 1883
 Keep_Alive_Interval = 45
 MQTT_Topic               = "krekan/#"
