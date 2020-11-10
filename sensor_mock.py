@@ -6,13 +6,14 @@ import paho.mqtt.client as mqtt
 import sensor_data_generator as sdg
 
 # MQTT Settings ---------------------------------------
-MQTT_Broker = "3.86.177.214" #"test.mosquitto.org"   #"54.159.150.221"
+MQTT_Broker = "18.206.226.9" #"test.mosquitto.org"
 MQTT_Port = 1883
 Keep_Alive_Interval = 45
 MQTT_Topic_Temperature   = "krekan/Temperature"
 MQTT_Topic_Humidity      = "krekan/Humidity"
 MQTT_Topic_AirPressure   = "krekan/AirPressure"
 MQTT_Topic_Contamination = "krekan/Contamination"
+MQTT_Topic_AllInfo = "krekan/AllInfo"
 #------------------------------------------------------
 
 def on_connect(client, userdata, rc):
@@ -40,7 +41,7 @@ def publish_to_topic(topic, message):
     print("Published: " + str(message) + " on MQTT Topic: " + str(topic))
     print("")
 
-toggle = 0
+#toggle = 0
 
 def publish_fake_sensor_data_to_MQTT(sensor_data, parameters):  
     global toggle
@@ -52,24 +53,32 @@ def publish_fake_sensor_data_to_MQTT(sensor_data, parameters):
     Data_To_Publish["Longitude"] = sensor_data[3]
     Data_To_Publish["Date"] = (datetime.datetime.today()).strftime("%d-%b-%Y %H:%M:%S:%f")
     
-    if toggle == 0:
-        Data_To_Publish["Temperature"] = parameters[0]
-        publish_to_topic(MQTT_Topic_Temperature, json.dumps(Data_To_Publish))
-        toggle = 1
-    elif toggle == 1:
-        Data_To_Publish["Humidity"] = parameters[1]
-        publish_to_topic(MQTT_Topic_Humidity, json.dumps(Data_To_Publish))
-        toggle = 2
-    elif toggle == 2:
-        Data_To_Publish["AirPressure"] = parameters[2]
-        publish_to_topic(MQTT_Topic_AirPressure, json.dumps(Data_To_Publish))
-        toggle = 3
-    elif toggle == 3:
-        Data_To_Publish["Pm10"] = parameters[3]
-        Data_To_Publish["Pm2_5"] = parameters[4]
-        Data_To_Publish["Pm1"] = parameters[5]
-        publish_to_topic(MQTT_Topic_Contamination, json.dumps(Data_To_Publish))
-        toggle = 0
+    Data_To_Publish["Temperature"] = parameters[0]
+    Data_To_Publish["Humidity"] = parameters[1]
+    Data_To_Publish["AirPressure"] = parameters[2]
+    Data_To_Publish["Pm10"] = parameters[3]
+    Data_To_Publish["Pm2_5"] = parameters[4]
+    Data_To_Publish["Pm1"] = parameters[5]
+    publish_to_topic(MQTT_Topic_AllInfo, json.dumps(Data_To_Publish))
+
+    # if toggle == 0:
+    #     Data_To_Publish["Temperature"] = parameters[0]
+    #     publish_to_topic(MQTT_Topic_Temperature, json.dumps(Data_To_Publish))
+    #     toggle = 1
+    # elif toggle == 1:
+    #     Data_To_Publish["Humidity"] = parameters[1]
+    #     publish_to_topic(MQTT_Topic_Humidity, json.dumps(Data_To_Publish))
+    #     toggle = 2
+    # elif toggle == 2:
+    #     Data_To_Publish["AirPressure"] = parameters[2]
+    #     publish_to_topic(MQTT_Topic_AirPressure, json.dumps(Data_To_Publish))
+    #     toggle = 3
+    # elif toggle == 3:
+    #     Data_To_Publish["Pm10"] = parameters[3]
+    #     Data_To_Publish["Pm2_5"] = parameters[4]
+    #     Data_To_Publish["Pm1"] = parameters[5]
+    #     publish_to_topic(MQTT_Topic_Contamination, json.dumps(Data_To_Publish))
+    #     toggle = 0
 
 sleep_between_readings_interval = 0.5
 

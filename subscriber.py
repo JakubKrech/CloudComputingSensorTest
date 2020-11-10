@@ -3,7 +3,7 @@ import paho.mqtt.client as mqtt
 from pymongo import MongoClient
 
 # MQTT Settings ---------------------------------------
-MQTT_Broker = "3.86.177.214" #"test.mosquitto.org" #"54.159.150.221" 
+MQTT_Broker = "18.206.226.9" #"test.mosquitto.org"
 MQTT_Port = 1883
 Keep_Alive_Interval = 45
 MQTT_Topic               = "krekan/#"
@@ -11,11 +11,13 @@ MQTT_Topic_Temperature   = "krekan/Temperature"
 MQTT_Topic_Humidity      = "krekan/Humidity"
 MQTT_Topic_AirPressure   = "krekan/AirPressure"
 MQTT_Topic_Contamination = "krekan/Contamination"
+MQTT_Topic_AllInfo = "krekan/AllInfo"
 # DB Settings -----------------------------------------
 temp_data =[]
 humidity_data = []
 airPressure_data = []
 contamination_data = []
+allInfo_data = []
 database_batch_size = 10
 client = MongoClient("mongodb+srv://kkite:kkite@mydbcloud.eu9qs.mongodb.net/<dbname>?retryWrites=true&w=majority")
 mydatabase = client['KreKan']
@@ -72,6 +74,14 @@ def handle_database(topic, payload):
             print("Sending batch of data to database, topic: {}". format(topic))
             collection.insert_many(contamination_data)
             contamination_data.clear()
+
+    if(topic == MQTT_Topic_AllInfo):
+        allInfo_data.append(json.loads(payload))
+
+        if(len(allInfo_data) == database_batch_size):
+            print("Sending batch of data to database, topic: {}". format(topic))
+            collection.insert_many(allInfo_data)
+            allInfo_data.clear()
 
 mqttc = mqtt.Client()
 
